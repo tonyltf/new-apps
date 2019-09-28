@@ -1,1 +1,10 @@
 @import 'styles/colors.scss';
+
+.news-app-header {
+  background-color: $header-bg;
+  padding: 1rem;
+
+  .text {
+    color: $header-text;
+  }
+}
