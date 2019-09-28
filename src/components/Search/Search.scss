@@ -1,1 +1,31 @@
 @import 'styles/colors.scss';
+
+.news-app-search {
+  background-color: $search-bg;
+  display: inline-block;
+  line-height: 1rem;  
+  min-width: 100px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-flex;
+
+  svg {
+    fill: $search-icon;
+    height: 1rem;
+    width: 1rem;
+    align-self: center;
+  }
+
+  .news-app-search-input {
+    ::-webkit-input-placeholder,
+    :-ms-input-placeholder,
+    ::placeholder {
+      color: $search-placeholder;
+    }
+    color: $search-text;
+    margin: 0 5px;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+  }
+}
