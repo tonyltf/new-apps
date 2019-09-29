@@ -4,4 +4,4 @@ $sm: 576px; // small devices >= 576px
 $xl: 1200px; // extra large devices >= 1200px
 $xs: 576px; // extra small devices <= 576px
 
-$contain-max-width: 1024px;
+$contain-max-width: $xl;
