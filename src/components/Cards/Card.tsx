@@ -1,23 +1,10 @@
 import React from 'react';
 import Avatar from './Avatar';
+import { News } from '../../store/news';
 import './Card.scss';
 
-interface Props {
-  source: {
-    id: number | null;
-    name: string;
-  };
-  author: string;
-  title: string;
-  description: string;
-  url: string;
-  urlToImage: string;
-  publishedAt: string;
-  content: string;
-}
-
-const Card: React.FC<Props> = props => {
-  const { source, title, description, url, urlToImage, publishedAt, content } = props;
+const Card: React.FC<News> = props => {
+  const { source, title, url, urlToImage, publishedAt, content } = props;
   const { name } = source;
   return (
     <div className="news-app-card">
