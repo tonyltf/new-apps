@@ -1,18 +1,19 @@
 @import 'styles/colors.scss';
+@import 'styles/layout.scss';
 
-$card-width: 300px;
+$card-width: $xs;
 $card-height: 500px;
 
 .news-app-card {
-  width: 300px;
-  height: 450px;
+  min-width: 300px;
+  height: $card-height;
   overflow: hidden;
 
   box-shadow: 2px 2px 6px $card-shadow;
   border-radius: 5px;
 
   &-image, &-image > img{
-    width: 300px;
+    max-width: 100%;
     height: auto;
   }
 

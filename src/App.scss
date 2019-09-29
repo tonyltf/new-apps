@@ -10,5 +10,15 @@ $font-size: 1em;
   .App-Container{
     padding: 1rem;
   }
-}
 
+  .news-app-conent-wrapper {
+    max-width: $container-max-width;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  a, a:active, a:focus, a:visited {
+    color: inherit;
+    text-decoration: none;
+  }
+}

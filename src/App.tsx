@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from './components/Header';
 import './App.scss';
+import CardsList from './components/Cards/';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +17,7 @@ const App: React.FC = () => {
         <meta property="og:type" content="article" />
       </Helmet>
       <Header title="US News" />
-      <div className="App-Container"></div>
+      <CardsList />
     </div>
   );
 };
