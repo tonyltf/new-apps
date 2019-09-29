@@ -9,10 +9,11 @@ interface Props {
 
 const Header: React.FC<Props> = ({ title }) => {
   return (
-    <header className="news-app-header">
-      <MyText>{title}</MyText>
-      <span className="separate" />
-      <Search />
+    <header className="news-app-header-wrapper">
+      <div className="news-app-header">
+        <MyText>{title}</MyText>
+        <Search />
+      </div>
     </header>
   );
 };

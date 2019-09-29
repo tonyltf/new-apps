@@ -1,11 +1,14 @@
 @import 'styles/colors.scss';
+@import 'styles/layout.scss';
 
 $font-size: 1em;
 
 .App {
   font-size: $font-size;
+  margin: 0 auto;
 
   .App-Container{
     padding: 1rem;
   }
 }
+

@@ -18,6 +18,7 @@
   border-radius: 5px;
   display: inline-flex;
   width: auto;
+  max-width: 250px;
 
   svg {
     fill: $search-icon;

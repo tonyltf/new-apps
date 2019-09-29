@@ -4,34 +4,40 @@
 
 @media only screen and (max-width: $sm) {
 
-  .news-app-header {
-    .separate {
-      display: none;
+  .news-app-header-wrapper {
+    .news-app-header {
+      .separate {
+        display: none;
+      }
     }
   }
 }
-
-.news-app-header {
+.news-app-header-wrapper {
+  width: 100%;
   background-color: $header-bg;
-  padding: 1rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  .text {
-    color: $header-text;
-  white-space: nowrap;
-  }
-  
-  > span {
-    flex-grow: 1;
-    flex-basis: 1rem;
-
-    &:first-child {
-      margin-right: 5px;
+  .news-app-header {
+    max-width: $contain-max-width;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    .text {
+      color: $header-text;
+      white-space: nowrap;
     }
-    &:last-child {
-      margin-left: 5px;
+    
+    > span {
+      flex-grow: 1;
+      flex-basis: 1rem;
+      
+      &:first-child {
+        margin-right: 5px;
+      }
+      &:last-child {
+        margin-left: 5px;
+      }
     }
   }
 }
