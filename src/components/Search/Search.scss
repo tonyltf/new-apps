@@ -1,13 +1,23 @@
 @import 'styles/colors.scss';
+@import 'styles/layout.scss';
+
+
+
+@media only screen and (min-width: $sm) {
+
+  .news-app-search {
+    width: auto;
+  }
+}
 
 .news-app-search {
   background-color: $search-bg;
   display: inline-block;
   line-height: 1rem;  
-  min-width: 100px;
   padding: 5px 10px;
   border-radius: 5px;
   display: inline-flex;
+  width: auto;
 
   svg {
     fill: $search-icon;
@@ -27,5 +37,8 @@
     background-color: transparent;
     box-shadow: none;
     border: none;
+    width: 100%;
+
+    flex-basis: 100px;
   }
 }
