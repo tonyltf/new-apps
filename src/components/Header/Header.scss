@@ -1,9 +1,7 @@
 @import 'styles/colors.scss';
 @import 'styles/layout.scss';
 
-
 @media only screen and (max-width: $sm) {
-
   .news-app-header-wrapper {
     .news-app-header {
       .separate {
@@ -12,6 +10,7 @@
     }
   }
 }
+
 .news-app-header-wrapper {
   width: 100%;
   background-color: $header-bg;
@@ -41,4 +40,3 @@
     }
   }
 }
-  
