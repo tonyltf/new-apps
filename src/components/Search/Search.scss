@@ -1,10 +1,7 @@
 @import 'styles/colors.scss';
 @import 'styles/layout.scss';
 
-
-
 @media only screen and (min-width: $sm) {
-
   .news-app-search {
     width: auto;
   }
@@ -19,7 +16,8 @@
   display: inline-flex;
   width: auto;
   max-width: 250px;
-
+  min-width: 0px;
+  
   svg {
     fill: $search-icon;
     height: 1rem;
@@ -38,8 +36,10 @@
     background-color: transparent;
     box-shadow: none;
     border: none;
-    width: 100%;
-
+    width: inherit;
     flex-basis: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
