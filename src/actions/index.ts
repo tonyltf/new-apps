@@ -10,7 +10,7 @@ interface FetchNewsAction {
 }
 interface FetchNewsSuccessAction {
   type: typeof FETCH_NEWS_SUCCESS;
-  payload: News[];
+  news: News[];
 }
 interface FetchNewsFailedAction {
   type: typeof FETCH_NEWS_FAILED;
@@ -29,7 +29,7 @@ export function fetchNews(loading: boolean): FetchNewsAction {
 export function fetchNewsSuccess(news: News[]): FetchNewsSuccessAction {
   return {
     type: FETCH_NEWS_SUCCESS,
-    payload: news,
+    news,
   };
 }
 

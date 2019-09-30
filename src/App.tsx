@@ -9,25 +9,9 @@ import { connect } from 'react-redux';
 import { fetchNews } from './actions';
 import { AppState } from './store';
 
-interface AppProps {
-  news: NewsState;
-  fetchNews: typeof fetchNews;
-  thunkFetchNews: any;
-}
-class App extends React.Component<AppProps> {
-  state = {
-    loading: false,
-    news: [],
-  };
-
-  componentDidMount(): void {
-    const { thunkFetchNews } = this.props;
-    if (thunkFetchNews) thunkFetchNews(1, '');
-  }
+class App extends React.Component {
 
   render(): ReactElement {
-    const { news } = this.props;
-    console.log({ news });
     return (
       <div className="App">
         <Helmet>
@@ -40,23 +24,11 @@ class App extends React.Component<AppProps> {
           <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-1024x1024.png" />
         </Helmet>
         <Header title="US News" />
-        <CardsList data={news && news.news} />
+        <CardsList />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: AppState): any => {
-  console.log({ state });
-  return {
-    news: state.newsR,
-  };
-};
 
-export default connect(
-  mapStateToProps,
-  {
-    fetchNews,
-    thunkFetchNews,
-  },
-)(App);
+export default App;

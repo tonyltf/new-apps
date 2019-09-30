@@ -4,7 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 
 const rootReducer = combineReducers({
-  newsR: newsReducer,
+  news: newsReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

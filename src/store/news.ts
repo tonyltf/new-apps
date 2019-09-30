@@ -15,4 +15,5 @@ export interface News {
 export interface NewsState {
   loading: boolean;
   news: News[];
+  message: string;
 }

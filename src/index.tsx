@@ -4,21 +4,12 @@ import App from './App';
 import { Provider } from 'react-redux';
 import configureStore from './store';
 import * as serviceWorker from './serviceWorker';
-import { fetchNews } from './actions';
-import { thunkFetchNews } from './thunks';
 
 const store = configureStore();
 
 const Root = (): ReactElement => (
   <Provider store={store}>
-    <App
-      news={{
-        loading: false,
-        news: [],
-      }}
-      fetchNews={fetchNews}
-      thunkFetchNews={thunkFetchNews}
-    />
+    <App />
   </Provider>
 );
 

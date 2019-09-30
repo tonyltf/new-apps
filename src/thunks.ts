@@ -1,7 +1,7 @@
 // src/thunks.ts
 
 import { Action } from 'redux';
-import { fetchNews } from './actions';
+import { fetchNews, fetchNewsSuccess, fetchNewsFailed } from './actions';
 import { AppState } from './store';
 import { ThunkAction } from 'redux-thunk';
 import './index.css';
@@ -15,18 +15,22 @@ export const thunkFetchNews = (
   search: string,
 ): ThunkAction<void, AppState, null, Action<string>> => async dispatch => {
   try {
+    
+    dispatch(
+      fetchNews(true)
+    );
     const res = await fetch(
       `https://newsapi.org/v2/everything?q=${search}&sources=${SOURCE_LIST.join(
         ',',
       )}&pageSize=${pageSize}&page=${page}&apiKey=${API_KEY}`,
     );
     const json = await res.json();
+    console.log({json})
     dispatch(
-      fetchNews({
-        ...json.articles,
-      }),
+      fetchNewsSuccess(json.articles)
     );
   } catch (e) {
     console.error({ e });
+    fetchNewsFailed(e)
   }
 };
