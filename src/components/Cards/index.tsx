@@ -9,7 +9,7 @@ import Spinner from '../common/Spinner';
 import { ThunkDispatch } from 'redux-thunk';
 import 'react-virtualized/styles.css';
 import './CardsList.scss';
-import { maxCount, pageSize } from 'components/common/constants';
+import { maxCount, pageSize, xsLayout, lgLayout } from 'components/common/constants';
 
 interface AppProps {
   newsState?: NewsAppState;
@@ -20,11 +20,17 @@ class CardsList extends React.PureComponent<AppProps> {
   state = {
     loading: false,
     news: [],
-    message: '',
+    search: '',
+    data1Col: [],
+    news2Col: [],
+    news3Col: [],
   };
 
   remoteRowCount = maxCount;
-
+  _loadMoreRowsStartIndex = 0;
+  _loadMoreRowsStopIndex = 0;
+  _numOfCol = 1;
+  
   constructor(props: AppProps) {
     super(props);
     this.itemRenderer = this.itemRenderer.bind(this);
@@ -32,11 +38,43 @@ class CardsList extends React.PureComponent<AppProps> {
     this.loadMoreRows = this.loadMoreRows.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
   }
-
+  
   componentDidMount(): void {
-    const { fetchNews } = this.props;
-    console.log({ fetchNews });
-    if (fetchNews) fetchNews(1, '');
+    const { newsState: N } = this.props;
+    if (N) {
+      // const { news } = N;
+      // const data1Col: News[] = news;
+      // const news2Col: News[][] = [];
+      // const news3Col: News[][] = [];
+      // news.forEach((item, index) => {
+      //   if (index % 2) {
+      //     news2Col.push([news[index - 1], news[index]]);
+      //   }
+      //   if (index % 3) {
+      //     news3Col.push([news[index - 2], news[index - 1], news[index]]);
+      //   }
+      // });
+      // this.setState({
+      //   data1Col,
+      //   news2Col,
+      //   news3Col,
+      // });
+    }
+    // if (fetchNews) fetchNews(1, '');
+  }
+
+  componentDidUpdate(prevProps: AppProps): void {
+    const { newsState: N1 } = this.props;
+    const { newsState: N2 } = prevProps;
+    console.log({ N1, N2 });
+    if (N1 && N2) {
+      if (N1.search !== N2.search) {
+        this.loadMoreRows({
+          startIndex: this._loadMoreRowsStartIndex,
+          stopIndex: this._loadMoreRowsStopIndex,
+        });
+      }
+    }
   }
 
   itemRenderer(): ReactElement | ReactElement[] {
@@ -47,19 +85,28 @@ class CardsList extends React.PureComponent<AppProps> {
   }
 
   isRowLoaded({ index }: { index: number }): boolean {
+    console.log('isRowLoaded');
     const { newsState: N } = this.props;
     if (!N) return false;
-    const { news } = N;
+    const { news, allNews } = N;
     console.log({ news });
-    return !!news[index];
+    return !!allNews[index];
   }
 
   loadMoreRows({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }): Promise<any> {
+    console.log('loadMoreRows', { startIndex, stopIndex });
     try {
-      const { fetchNews } = this.props;
-      console.log({ startIndex, stopIndex });
-      if (fetchNews && stopIndex) {
-        return fetchNews(Math.ceil(stopIndex / pageSize), '');
+      this._loadMoreRowsStartIndex = startIndex;
+      this._loadMoreRowsStopIndex = stopIndex;
+      const { newsState: N, fetchNews } = this.props;
+      if (N) {
+        const { news, allNews } = N;
+        if (allNews && fetchNews && stopIndex) {
+          console.log(allNews, stopIndex);
+          if (stopIndex > allNews.length) {
+            return fetchNews(Math.ceil(stopIndex / pageSize), '');
+          }
+        }
       }
     } catch (error) {
       console.log({ error });
@@ -68,6 +115,60 @@ class CardsList extends React.PureComponent<AppProps> {
       resolve();
     });
   }
+
+  // rowRenderer({
+  //   key,
+  //   index,
+  //   style,
+  // }: {
+  //   key: string;
+  //   index: number;
+  //   style: React.CSSProperties;
+  // }): boolean | ReactElement {
+  //   const { newsState: N } = this.props;
+  //   if (!N) return <div />;
+  //   const { news } = N;
+  //   console.log({ news, index });
+
+  //   const news1Col: News[][] = [];
+  //   const news2Col: News[][] = [];
+  //   const news3Col: News[][] = [];
+  //   news.forEach((item, index) => {
+  //     if (this._numOfCol === 1) {
+  //       news1Col.push([news[index]]);
+  //     }
+  //     if (this._numOfCol === 2 && index % 2) {
+  //       news2Col.push([news[index - 1], news[index]]);
+  //     }
+  //     if (this._numOfCol === 3 && index % 3) {
+  //       news3Col.push([news[index - 2], news[index - 1], news[index]]);
+  //     }
+  //   });
+  //   console.log(this._numOfCol, { news1Col, news2Col, news3Col });
+
+  //   return (
+  //     <React.Fragment>
+  //       {this._numOfCol === 1 && news1Col.length > 0 && (
+  //         <div key={key} style={style} className={`card-list-card-wrapper col${this._numOfCol}`}>
+  //           <Card key={index} {...news1Col[index][0]} />
+  //         </div>
+  //       )}
+  //       {this._numOfCol === 2 && index % 2 && news2Col.length > 0 && (
+  //         <div key={key} style={style} className={`card-list-card-wrapper col${this._numOfCol}`}>
+  //           {news2Col[index] && <Card key={`${index}0`} {...news2Col[index][0]} />}
+  //           {news2Col[index] && <Card key={`${index}1`} {...news2Col[index][1]} />}
+  //         </div>
+  //       )}
+  //       {this._numOfCol === 3 && index !== 0 && index % 3 === 0 && news3Col.length > 0 && (
+  //         <div key={key} style={style} className={`card-list-card-wrapper col${this._numOfCol}`}>
+  //           {news3Col[index] && news3Col[index][0] && <Card key={`${index}0`} {...news3Col[index][0]} />}
+  //           {news3Col[index] && news3Col[index][1] && <Card key={`${index}1`} {...news3Col[index][1]} />}
+  //           {news3Col[index] && news3Col[index][2] && <Card key={`${index}2`} {...news3Col[index][2]} />}
+  //         </div>
+  //       )}
+  //     </React.Fragment>
+  //   );
+  // }
 
   rowRenderer({
     key,
@@ -81,14 +182,13 @@ class CardsList extends React.PureComponent<AppProps> {
     const { newsState: N } = this.props;
     if (!N) return <div />;
     const { news } = N;
-    console.log({ news, index });
+
     return (
       index < news.length && (
-        <div key={key} style={style} className="cards-list-card-wrapper">
+        <div key={key} style={style} className="card-list-card-wrapper">
           <Card key={index} {...news[index]} />
         </div>
-      )
-    );
+    ));
   }
   //  {news && news.map((item: any, index: number) => <Card key={index} {...item} />)}
 
@@ -97,7 +197,7 @@ class CardsList extends React.PureComponent<AppProps> {
     if (!N) return <Spinner />;
     const { news, loading } = N;
     return (
-      <div className="card-list-wrapper" style={{ flex: '1 1 auto', minHeight: '500px' }}>
+      <div className="card-list-wrapper">
         <InfiniteLoader
           className="infinte-loader-wrapper"
           isRowLoaded={this.isRowLoaded}
@@ -106,20 +206,37 @@ class CardsList extends React.PureComponent<AppProps> {
         >
           {({ onRowsRendered, registerChild }) => (
             <AutoSizer className="autoszier-wrapper">
-              {({ height, width }) => (
-                <React.Fragment>
-                  {loading && <Spinner />}
-                  <List
-                    ref={registerChild}
-                    height={height}
-                    onRowsRendered={onRowsRendered}
-                    rowCount={this.remoteRowCount}
-                    rowHeight={630}
-                    rowRenderer={this.rowRenderer}
-                    width={width}
-                  />
-                </React.Fragment>
-              )}
+              {({ height, width }) => {
+                if (width < xsLayout) {
+                  this._numOfCol = 1;
+                }
+                if (width >= xsLayout && width <= lgLayout) {
+                  this._numOfCol = 2;
+                }
+                if (width >= lgLayout) {
+                  this._numOfCol = 3;
+                }
+                console.log({ width }, this._numOfCol);
+                return (
+                  <React.Fragment>
+                    {loading && (
+                      <div className="spinner-container">
+                        <Spinner />
+                      </div>
+                    )}
+                    <List 
+                      ref={registerChild}
+                      height={height}
+                      onRowsRendered={onRowsRendered}
+                      rowCount={Math.round(this.remoteRowCount / this._numOfCol)}
+                      rowHeight={630}
+                      rowRenderer={this.rowRenderer}
+                      width={width}
+                    />
+                    {!news.length && <div>No news found</div>}
+                  </React.Fragment>
+                );
+              }}
             </AutoSizer>
           )}
         </InfiniteLoader>
@@ -132,8 +249,6 @@ const mapStateToProps = (state: NewsAppState): any => {
   console.log({ state });
   return {
     newsState: state.news,
-    loading: state.loading,
-    message: state.message,
   };
 };
 

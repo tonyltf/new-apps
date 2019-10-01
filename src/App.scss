@@ -1,7 +1,11 @@
 @import 'styles/colors.scss';
 @import 'styles/layout.scss';
+@import 'styles/scrollbar.scss';
 
 $font-size: 1em;
+
+@include scrollbars(.5rem, $header-bg);
+
 html {
   height: 100%;
   overflow: hidden;

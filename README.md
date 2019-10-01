@@ -47,5 +47,19 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ### `npm config set '@bit:registry' https://node.bit.dev`
+### `npm install`
+
+
+### `npm run start`
+
+## Runs the app in the development mode
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+
+## Host a server
+
+### `npm install -g serve`
+### `serve -s build`
+
 
 Powered by News API

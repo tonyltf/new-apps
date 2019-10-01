@@ -15,6 +15,6 @@ export interface News {
 export interface NewsAppState {
   loading: boolean;
   news: News[];
-  message: string;
+  search: string;
   allNews: News[];
 }

@@ -1,7 +1,7 @@
 // src/thunks.ts
 
 import { Action, AnyAction } from 'redux';
-import { fetchNews, fetchNewsSuccess, fetchNewsFailed } from './actions';
+import { fetchNews, fetchNewsSuccess, fetchNewsFailed, searchNews } from './actions';
 import { AppState } from './store';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import './index.css';
@@ -53,4 +53,11 @@ export const thunkFetchNews = (
     console.error({ e });
     dispatch(fetchNewsFailed(e));
   }
+};
+
+export const thunkSearchNews = (text: string): ThunkAction<void, AppState, null, Action<string>> => async (
+  dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): Promise<void> => {
+  dispatch(fetchNews(true));
+  dispatch(searchNews(text));
 };

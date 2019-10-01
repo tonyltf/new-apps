@@ -4,6 +4,7 @@ import { News } from '../../store/news';
 import './Card.scss';
 
 const Card: React.FC<News> = props => {
+  if (!props) return <div />;
   const { source, title, url, description, urlToImage, publishedAt, content } = props;
   const { name } = source;
   return (
