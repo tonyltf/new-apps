@@ -2,10 +2,21 @@
 @import 'styles/layout.scss';
 
 $font-size: 1em;
+html {
+  height: 100%;
+  overflow: hidden;
+  > body {
+    height: inherit;
+    div#root {
+      height: inherit;
+    }
+  }
+}
 
 .App {
   font-size: $font-size;
   margin: 0 auto;
+  height: inherit;
 
   .App-Container{
     padding: 1rem;
@@ -18,7 +29,9 @@ $font-size: 1em;
   }
   
   .card-list-wrapper {
-    margin-top: 60px;
+    // height: inherit;
+    height: calc(100% - 60px);
+    top: 60px;
   }
 
   a, a:active, a:focus, a:visited {

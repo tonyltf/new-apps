@@ -12,8 +12,9 @@ export interface News {
   content: string;
 }
 
-export interface NewsState {
+export interface NewsAppState {
   loading: boolean;
   news: News[];
   message: string;
+  allNews: News[];
 }

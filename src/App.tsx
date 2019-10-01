@@ -2,15 +2,9 @@ import React, { ReactElement } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from './components/Header';
 import './App.scss';
-import CardsList from './components/Cards/';
-import { NewsState, News } from './store/news';
-import { thunkFetchNews } from './thunks';
-import { connect } from 'react-redux';
-import { fetchNews } from './actions';
-import { AppState } from './store';
+import Cards from './components/Cards/';
 
 class App extends React.Component {
-
   render(): ReactElement {
     return (
       <div className="App">
@@ -24,11 +18,10 @@ class App extends React.Component {
           <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-1024x1024.png" />
         </Helmet>
         <Header title="US News" />
-        <CardsList />
+        <Cards />
       </div>
     );
   }
 }
-
 
 export default App;

@@ -1,41 +1,54 @@
 import { News } from '../store/news';
 
-export const FETCH_NEWS = 'FETCH_NEWS';
-export const FETCH_NEWS_SUCCESS = 'FETCH_NEWS_SUCCESS';
-export const FETCH_NEWS_FAILED = 'FETCH_NEWS_FAILED';
+export const FETCHING_NEWS = 'FETCHING_NEWS';
+export const FETCHING_NEWS_SUCCESS = 'FETCHING_NEWS_SUCCESS';
+export const FETCHING_NEWS_FAILED = 'FETCHING_NEWS_FAILED';
+export const SEARCH_NEWS = 'SEARCH_NEWS';
 
 interface FetchNewsAction {
-  type: typeof FETCH_NEWS;
+  type: typeof FETCHING_NEWS;
   loading: boolean;
 }
 interface FetchNewsSuccessAction {
-  type: typeof FETCH_NEWS_SUCCESS;
+  type: typeof FETCHING_NEWS_SUCCESS;
   news: News[];
 }
 interface FetchNewsFailedAction {
-  type: typeof FETCH_NEWS_FAILED;
+  type: typeof FETCHING_NEWS_FAILED;
   message: string;
 }
 
-export type NewsActionType = FetchNewsAction | FetchNewsSuccessAction | FetchNewsFailedAction;
+interface SearchNewsAction {
+  type: typeof SEARCH_NEWS;
+  search: string;
+}
+
+export type NewsActionType = FetchNewsAction | FetchNewsSuccessAction | FetchNewsFailedAction | SearchNewsAction;
 
 export function fetchNews(loading: boolean): FetchNewsAction {
   return {
-    type: FETCH_NEWS,
+    type: FETCHING_NEWS,
     loading,
   };
 }
 
 export function fetchNewsSuccess(news: News[]): FetchNewsSuccessAction {
   return {
-    type: FETCH_NEWS_SUCCESS,
+    type: FETCHING_NEWS_SUCCESS,
     news,
   };
 }
 
 export function fetchNewsFailed(message: string): FetchNewsFailedAction {
   return {
-    type: FETCH_NEWS_FAILED,
+    type: FETCHING_NEWS_FAILED,
     message,
+  };
+}
+
+export function searchNews(search: string): SearchNewsAction {
+  return {
+    type: SEARCH_NEWS,
+    search,
   };
 }

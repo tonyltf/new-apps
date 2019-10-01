@@ -2,7 +2,7 @@
 @import 'styles/layout.scss';
 
 $card-width: $xs;
-$card-height: 500px;
+$card-height: 600PX;
 
 .news-app-card {
   min-width: 300px;
@@ -15,6 +15,8 @@ $card-height: 500px;
   &-image, &-image > img{
     max-width: 100%;
     height: auto;
+    max-height: 300px;
+    text-align: center;
   }
 
   &-title {

@@ -12,11 +12,20 @@
   &-wrapper {
     max-width: $container-max-width;
     margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    
+    // padding: 0 1rem;
+    // display: block;
+    // flex-wrap: wrap;
+    // justify-content: space-between;
+
+    > .news-app-card {
+      flex-basis: 50%;
+      max-width: 45%;
+      margin: 15px 0;
+    }
+  }
+
+  &-card-wrapper {
+    margin: 1rem 0;
     > .news-app-card {
       flex-basis: 50%;
       max-width: 45%;
@@ -50,3 +59,12 @@
   }
 }
 
+.ReactVirtualized__Grid__innerScrollContainer {
+  margin: 0 1rem;
+}
+
+.autoszier-wrapper {
+  // height: 70px!important;
+  width: 100%!important;
+  background-color: transparent;
+}
