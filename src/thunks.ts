@@ -7,6 +7,7 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import './index.css';
 import { News } from 'store/news';
 import { pageSize, API_KEY, SOURCE_LIST } from 'components/common/constants';
+import { debounce } from 'lodash';
 
 interface NewsJson {
   status: string;
@@ -58,6 +59,7 @@ export const thunkFetchNews = (
 export const thunkSearchNews = (text: string): ThunkAction<void, AppState, null, Action<string>> => async (
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): Promise<void> => {
-  dispatch(fetchNews(true));
-  dispatch(searchNews(text));
+  debounce(() => {
+    dispatch(searchNews(text));
+  }, 500)();
 };

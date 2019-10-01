@@ -30,7 +30,7 @@ class CardsList extends React.PureComponent<AppProps> {
   _loadMoreRowsStartIndex = 0;
   _loadMoreRowsStopIndex = 0;
   _numOfCol = 1;
-  
+
   constructor(props: AppProps) {
     super(props);
     this.itemRenderer = this.itemRenderer.bind(this);
@@ -38,7 +38,7 @@ class CardsList extends React.PureComponent<AppProps> {
     this.loadMoreRows = this.loadMoreRows.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
   }
-  
+
   componentDidMount(): void {
     const { newsState: N } = this.props;
     if (N) {
@@ -224,7 +224,8 @@ class CardsList extends React.PureComponent<AppProps> {
                         <Spinner />
                       </div>
                     )}
-                    <List 
+                    {!loading && !news.length && <div>No news found</div>}
+                    <List
                       ref={registerChild}
                       height={height}
                       onRowsRendered={onRowsRendered}
@@ -233,7 +234,6 @@ class CardsList extends React.PureComponent<AppProps> {
                       rowRenderer={this.rowRenderer}
                       width={width}
                     />
-                    {!news.length && <div>No news found</div>}
                   </React.Fragment>
                 );
               }}

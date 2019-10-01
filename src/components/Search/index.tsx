@@ -16,9 +16,9 @@ const Search: React.FC<Props> = (props): ReactElement => {
   const _keyPress = (e: any): void => {
     const { value } = e.target;
     if (searchNews && value !== undefined) {
-      debounce(() => {
+      // debounce(() => {
         searchNews(value);
-      }, 500)();
+      // }, 500)();
     }
   };
   return (
