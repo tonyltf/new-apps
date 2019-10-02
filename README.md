@@ -10,6 +10,7 @@ A simple news app
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Host a server
+### `npm run build`
 ### `npm install -g serve`
 ### `serve -s build`
 
