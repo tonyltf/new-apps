@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactElement, forwardRef } from 'react';
-import { InfiniteLoader, AutoSizer, List, Grid } from 'react-virtualized';
+import { InfiniteLoader, AutoSizer } from 'react-virtualized';
 import { FixedSizeGrid, GridOnItemsRenderedProps } from 'react-window';
 import Card from './Card';
 import { NewsAppState } from '../../store/news';
 import { connect } from 'react-redux';
-import { thunkFetchNews, thunkClearNews } from '../../thunks';
+import { thunkFetchNews } from '../../thunks';
 import Spinner from '../common/Spinner';
 import { ThunkDispatch } from 'redux-thunk';
 import 'react-virtualized/styles.css';
@@ -76,7 +76,7 @@ class CardsList extends React.PureComponent<AppProps> {
       if (N) {
         const { allNews } = N;
         if (allNews && fetchNews && stopIndex) {
-          if (stopIndex > allNews.length) {
+          if (stopIndex > allNews.length && stopIndex <= maxCount) {
             return fetchNews(Math.ceil(stopIndex / pageSize), '');
           }
         }
@@ -174,7 +174,7 @@ class CardsList extends React.PureComponent<AppProps> {
                       columnWidth={ width > xlLayout ? (xlLayout / this._numOfCol - cardPaddingX * 2) : width / this._numOfCol - cardPaddingX * 2 }
                       height={height}
                       rowCount={this.remoteRowCount}
-                      rowHeight={cardHeight}
+                      rowHeight={cardHeight + cardPaddingY * 2}
                       width={width}
                       innerElementType={innerElementType}
                       onItemsRendered={this._onSectionRendered}
