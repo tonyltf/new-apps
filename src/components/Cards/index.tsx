@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactElement } from 'react';
-import { InfiniteLoader, AutoSizer, List } from 'react-virtualized';
+import React, { ReactElement, forwardRef } from 'react';
+import { InfiniteLoader, AutoSizer, List, Grid } from 'react-virtualized';
+import { FixedSizeGrid, GridOnItemsRenderedProps } from 'react-window';
 import Card from './Card';
 import { NewsAppState } from '../../store/news';
 import { connect } from 'react-redux';
-import { thunkFetchNews } from '../../thunks';
+import { thunkFetchNews, thunkClearNews } from '../../thunks';
 import Spinner from '../common/Spinner';
 import { ThunkDispatch } from 'redux-thunk';
 import 'react-virtualized/styles.css';
 import './CardsList.scss';
-import { maxCount, pageSize, xsLayout, lgLayout } from 'components/common/constants';
+import { maxCount, pageSize, xsLayout, lgLayout, cardHeight, cardWidth, cardPaddingX, cardPaddingY, xlLayout } from 'components/common/constants';
+import { clearNews } from 'actions';
 
 interface AppProps {
   newsState?: NewsAppState;
   fetchNews?: (page: number, search: string) => Promise<any>;
+  clearNews?: () => void;
 }
 
 class CardsList extends React.PureComponent<AppProps> {
@@ -30,79 +33,49 @@ class CardsList extends React.PureComponent<AppProps> {
   _loadMoreRowsStartIndex = 0;
   _loadMoreRowsStopIndex = 0;
   _numOfCol = 1;
+  _onRowsRendered = ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number; }) => {};
 
   constructor(props: AppProps) {
     super(props);
-    this.itemRenderer = this.itemRenderer.bind(this);
     this.isRowLoaded = this.isRowLoaded.bind(this);
     this.loadMoreRows = this.loadMoreRows.bind(this);
-    this.rowRenderer = this.rowRenderer.bind(this);
+    this._onSectionRendered = this._onSectionRendered.bind(this);
+    this._cellRenderer = this._cellRenderer.bind(this);
   }
 
   componentDidMount(): void {
-    const { newsState: N } = this.props;
-    if (N) {
-      // const { news } = N;
-      // const data1Col: News[] = news;
-      // const news2Col: News[][] = [];
-      // const news3Col: News[][] = [];
-      // news.forEach((item, index) => {
-      //   if (index % 2) {
-      //     news2Col.push([news[index - 1], news[index]]);
-      //   }
-      //   if (index % 3) {
-      //     news3Col.push([news[index - 2], news[index - 1], news[index]]);
-      //   }
-      // });
-      // this.setState({
-      //   data1Col,
-      //   news2Col,
-      //   news3Col,
-      // });
-    }
-    // if (fetchNews) fetchNews(1, '');
+    const {  fetchNews } = this.props;
+    if (fetchNews) fetchNews(1, '');
   }
 
   componentDidUpdate(prevProps: AppProps): void {
-    const { newsState: N1 } = this.props;
+    const { newsState: N1, clearNews } = this.props;
     const { newsState: N2 } = prevProps;
-    console.log({ N1, N2 });
-    if (N1 && N2) {
+    if (N1 && N2 && clearNews) {
       if (N1.search !== N2.search) {
-        this.loadMoreRows({
-          startIndex: this._loadMoreRowsStartIndex,
-          stopIndex: this._loadMoreRowsStopIndex,
-        });
+          this.loadMoreRows({
+            startIndex: this._loadMoreRowsStartIndex,
+            stopIndex: this._loadMoreRowsStopIndex,
+          });
       }
     }
   }
 
-  itemRenderer(): ReactElement | ReactElement[] {
-    const { newsState: N } = this.props;
-    if (!N) return <div />;
-    const { news } = N;
-    return news && news.map((item: any, index: number) => <Card key={index} {...item} />);
-  }
-
   isRowLoaded({ index }: { index: number }): boolean {
-    console.log('isRowLoaded');
     const { newsState: N } = this.props;
     if (!N) return false;
     const { news, allNews } = N;
-    console.log({ news });
     return !!allNews[index];
   }
 
   loadMoreRows({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }): Promise<any> {
-    console.log('loadMoreRows', { startIndex, stopIndex });
     try {
       this._loadMoreRowsStartIndex = startIndex;
       this._loadMoreRowsStopIndex = stopIndex;
       const { newsState: N, fetchNews } = this.props;
       if (N) {
-        const { news, allNews } = N;
+        const { allNews } = N;
         if (allNews && fetchNews && stopIndex) {
-          console.log(allNews, stopIndex);
           if (stopIndex > allNews.length) {
             return fetchNews(Math.ceil(stopIndex / pageSize), '');
           }
@@ -116,86 +89,40 @@ class CardsList extends React.PureComponent<AppProps> {
     });
   }
 
-  // rowRenderer({
-  //   key,
-  //   index,
-  //   style,
-  // }: {
-  //   key: string;
-  //   index: number;
-  //   style: React.CSSProperties;
-  // }): boolean | ReactElement {
-  //   const { newsState: N } = this.props;
-  //   if (!N) return <div />;
-  //   const { news } = N;
-  //   console.log({ news, index });
-
-  //   const news1Col: News[][] = [];
-  //   const news2Col: News[][] = [];
-  //   const news3Col: News[][] = [];
-  //   news.forEach((item, index) => {
-  //     if (this._numOfCol === 1) {
-  //       news1Col.push([news[index]]);
-  //     }
-  //     if (this._numOfCol === 2 && index % 2) {
-  //       news2Col.push([news[index - 1], news[index]]);
-  //     }
-  //     if (this._numOfCol === 3 && index % 3) {
-  //       news3Col.push([news[index - 2], news[index - 1], news[index]]);
-  //     }
-  //   });
-  //   console.log(this._numOfCol, { news1Col, news2Col, news3Col });
-
-  //   return (
-  //     <React.Fragment>
-  //       {this._numOfCol === 1 && news1Col.length > 0 && (
-  //         <div key={key} style={style} className={`card-list-card-wrapper col${this._numOfCol}`}>
-  //           <Card key={index} {...news1Col[index][0]} />
-  //         </div>
-  //       )}
-  //       {this._numOfCol === 2 && index % 2 && news2Col.length > 0 && (
-  //         <div key={key} style={style} className={`card-list-card-wrapper col${this._numOfCol}`}>
-  //           {news2Col[index] && <Card key={`${index}0`} {...news2Col[index][0]} />}
-  //           {news2Col[index] && <Card key={`${index}1`} {...news2Col[index][1]} />}
-  //         </div>
-  //       )}
-  //       {this._numOfCol === 3 && index !== 0 && index % 3 === 0 && news3Col.length > 0 && (
-  //         <div key={key} style={style} className={`card-list-card-wrapper col${this._numOfCol}`}>
-  //           {news3Col[index] && news3Col[index][0] && <Card key={`${index}0`} {...news3Col[index][0]} />}
-  //           {news3Col[index] && news3Col[index][1] && <Card key={`${index}1`} {...news3Col[index][1]} />}
-  //           {news3Col[index] && news3Col[index][2] && <Card key={`${index}2`} {...news3Col[index][2]} />}
-  //         </div>
-  //       )}
-  //     </React.Fragment>
-  //   );
-  // }
-
-  rowRenderer({
-    key,
-    index,
-    style,
-  }: {
-    key: string;
-    index: number;
-    style: React.CSSProperties;
-  }): boolean | ReactElement {
+  _cellRenderer ({ columnIndex, rowIndex, style }: { columnIndex: number, rowIndex: number, style: any }) {
     const { newsState: N } = this.props;
     if (!N) return <div />;
     const { news } = N;
-
+    const newIndex = (this._numOfCol * rowIndex + columnIndex);
     return (
-      index < news.length && (
-        <div key={key} style={style} className="card-list-card-wrapper">
-          <Card key={index} {...news[index]} />
+      newIndex < news.length ? (
+        <div key={newIndex} style={{ ...style, 
+          left: style.left + cardPaddingX * (columnIndex * 2 + 1) ,
+          top: style.top + cardPaddingY * (rowIndex * 2 + 1),
+          width: style.width - cardPaddingX ,
+          height: style.height - cardPaddingY * 2,
+          }} className="card-list-card-wrapper">
+          <Card key={newIndex} {...news[newIndex]} />
         </div>
-    ));
+      ) : (
+        <div key={newIndex} style={style} className="card-list-card-wrapper">
+        </div>
+      )
+    );
   }
-  //  {news && news.map((item: any, index: number) => <Card key={index} {...item} />)}
+  
+  _onSectionRendered (props: GridOnItemsRenderedProps): any {
+    const { visibleColumnStartIndex, visibleColumnStopIndex, visibleRowStartIndex, visibleRowStopIndex } = props
+    const startIndex = visibleRowStartIndex * this._numOfCol + visibleColumnStartIndex
+    const stopIndex = visibleRowStopIndex * this._numOfCol + visibleColumnStopIndex
+  
+    this._onRowsRendered({ startIndex, stopIndex })
+  }
 
   render(): ReactElement {
     const { newsState: N } = this.props;
     if (!N) return <Spinner />;
-    const { news, loading } = N;
+    const { news, loading, search } = N;
     return (
       <div className="card-list-wrapper">
         <InfiniteLoader
@@ -204,19 +131,35 @@ class CardsList extends React.PureComponent<AppProps> {
           loadMoreRows={this.loadMoreRows}
           rowCount={this.remoteRowCount}
         >
-          {({ onRowsRendered, registerChild }) => (
+          {({ onRowsRendered, registerChild }) => {
+            this._onRowsRendered = onRowsRendered;
+            return (
             <AutoSizer className="autoszier-wrapper">
               {({ height, width }) => {
+                this._numOfCol = 1;
                 if (width < xsLayout) {
                   this._numOfCol = 1;
                 }
                 if (width >= xsLayout && width <= lgLayout) {
                   this._numOfCol = 2;
                 }
-                if (width >= lgLayout) {
+                if (width > lgLayout) {
                   this._numOfCol = 3;
                 }
-                console.log({ width }, this._numOfCol);
+                const innerElementType = forwardRef(({ style, ...rest }: { style: any }, ref: any) => (
+                  <div
+                    ref={ref}
+                    style={{
+                      ...style,
+                      paddingLeft: cardPaddingX,
+                      paddingTop: cardPaddingY,
+                      maxWidth: xlLayout,
+                      margin: width > xlLayout ? '0 auto' : '0',
+                      position: 'relative',
+                    }}
+                    {...rest}
+                  />
+                ));
                 return (
                   <React.Fragment>
                     {loading && (
@@ -224,21 +167,25 @@ class CardsList extends React.PureComponent<AppProps> {
                         <Spinner />
                       </div>
                     )}
-                    {!loading && !news.length && <div>No news found</div>}
-                    <List
+                    {!loading && !news.length && search.length > 0 && <div>No news found</div>}
+                    <FixedSizeGrid
                       ref={registerChild}
+                      columnCount={this._numOfCol}
+                      columnWidth={ width > xlLayout ? (xlLayout / this._numOfCol - cardPaddingX * 2) : width / this._numOfCol - cardPaddingX * 2 }
                       height={height}
-                      onRowsRendered={onRowsRendered}
-                      rowCount={Math.round(this.remoteRowCount / this._numOfCol)}
-                      rowHeight={630}
-                      rowRenderer={this.rowRenderer}
+                      rowCount={this.remoteRowCount}
+                      rowHeight={cardHeight}
                       width={width}
-                    />
+                      innerElementType={innerElementType}
+                      onItemsRendered={this._onSectionRendered}
+                    >
+                     {this._cellRenderer}
+                    </FixedSizeGrid>
                   </React.Fragment>
                 );
               }}
             </AutoSizer>
-          )}
+          )}}
         </InfiniteLoader>
       </div>
     );
@@ -246,7 +193,6 @@ class CardsList extends React.PureComponent<AppProps> {
 }
 
 const mapStateToProps = (state: NewsAppState): any => {
-  console.log({ state });
   return {
     newsState: state.news,
   };
@@ -255,6 +201,7 @@ const mapStateToProps = (state: NewsAppState): any => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): any => {
   return {
     fetchNews: async (page: number, search: string): Promise<any> => await dispatch(thunkFetchNews(page, search)),
+    clearNews: () => dispatch(clearNews()),
   };
 };
 

@@ -1,6 +1,5 @@
 import { NewsAppState, News } from '../store/news';
-import { FETCHING_NEWS, FETCH_NEWS_SUCCESS, FETCH_NEWS_FAILED, NewsActionType, SEARCH_NEWS } from '../actions';
-import { timeout } from 'q';
+import { FETCHING_NEWS, FETCH_NEWS_SUCCESS, FETCH_NEWS_FAILED, NewsActionType, SEARCH_NEWS, CLEAR_NEWS } from '../actions';
 
 export const initialState: NewsAppState = {
   loading: false,
@@ -28,13 +27,9 @@ export function newsReducer(state: NewsAppState = initialState, action: NewsActi
       };
     }
     case FETCH_NEWS_SUCCESS: {
-      console.log({ state, action });
-      const filteredNews = filterNews(action.news, state.search);
-      const allUrl = state.allNews.map(item => item.url);
-      const newsSet = new Set<News>();
-      state.news.forEach(item => (!state.allNews.map(item => item.url).includes(item.url) ? newsSet.add(item) : ''));
-      action.news.forEach(item => (!state.allNews.map(item => item.url).includes(item.url) ? newsSet.add(item) : ''));
-      console.log({ newsSet });
+      const newsSet = new Set<News>(state.allNews);
+      state.allNews.forEach(item => (!state.allNews.map(item => item.title).includes(item.title) ? newsSet.add(item) : ''));
+      action.news.forEach(item => (!state.allNews.map(item => item.title).includes(item.title) ? newsSet.add(item) : ''));
       return {
         ...state,
         news: [...filterNews(Array.from(newsSet), state.search)],
@@ -49,16 +44,20 @@ export function newsReducer(state: NewsAppState = initialState, action: NewsActi
       };
     }
     case SEARCH_NEWS: {
-      console.log({ state, action });
       const filteredNews = filterNews(state.allNews, state.search);
       const newsSet = new Set<News>();
-      filteredNews.forEach(item => newsSet.add(item));
-      console.log({ newsSet });
+      filteredNews.forEach(item => (!state.allNews.map(item => item.title).includes(item.title) ?  newsSet.add(item) : ''));
       return {
         ...state,
         search: action.search,
         news: filterNews(state.allNews, action.search),
       };
+    }
+    case CLEAR_NEWS: {
+      return {
+        ...state,
+        news: [],
+      }
     }
     default:
       return state;

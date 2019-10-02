@@ -4,6 +4,7 @@ export const FETCHING_NEWS = 'FETCHING_NEWS';
 export const FETCH_NEWS_SUCCESS = 'FETCH_NEWS_SUCCESS';
 export const FETCH_NEWS_FAILED = 'FETCH_NEWS_FAILED';
 export const SEARCH_NEWS = 'SEARCH_NEWS';
+export const CLEAR_NEWS = 'CLEAR_NEWS';
 
 interface FetchNewsAction {
   type: typeof FETCHING_NEWS;
@@ -23,7 +24,11 @@ interface SearchNewsAction {
   search: string;
 }
 
-export type NewsActionType = FetchNewsAction | FetchNewsSuccessAction | FetchNewsFailedAction | SearchNewsAction;
+interface ClearNewsAction {
+  type: typeof CLEAR_NEWS;
+}
+
+export type NewsActionType = FetchNewsAction | FetchNewsSuccessAction | FetchNewsFailedAction | SearchNewsAction | ClearNewsAction;
 
 export function fetchNews(loading: boolean): FetchNewsAction {
   return {
@@ -50,5 +55,11 @@ export function searchNews(search: string): SearchNewsAction {
   return {
     type: SEARCH_NEWS,
     search,
+  };
+}
+
+export function clearNews(): ClearNewsAction {
+  return {
+    type: CLEAR_NEWS,
   };
 }
